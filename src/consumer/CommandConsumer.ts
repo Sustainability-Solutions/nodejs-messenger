@@ -1,8 +1,8 @@
-import { amqpConnect, toJSON, retryable } from '../utils';
+import { Channel, Message } from 'amqplib';
+import { EventEmitter } from 'events';
 import { getCommandEmitter } from '../container/pubSubInitialization';
 import { config as configType, messageBody } from '../types';
-import { EventEmitter } from 'events';
-import { Channel, Message } from 'amqplib';
+import { amqpConnect, retryable, toJSON } from '../utils';
 
 export default class CommandConsumer {
   private readonly transports: configType['transports']
@@ -118,7 +118,7 @@ export default class CommandConsumer {
           const {
             maxRetries,
             delay,
-            retryExchangeName = 'blom.retries.exchange',
+            retryExchangeName = '',
             onRejected = null,
           } = retryPolicy;
 

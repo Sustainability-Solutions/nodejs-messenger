@@ -1,4 +1,4 @@
-# Colvin nodejs async events
+# Manglai nodejs async events
 
 A RabbitMQ package with some utils like retryables
 
@@ -18,24 +18,24 @@ You have to create a file with this structure or a callable which returns this s
 export default {
   transports: {
     accounting_commands: { // A transport unique name as identifier
-      connectionString: process.env.RABBITMQ_CONNECTION_URL, // A dns connection string like --> amqp://rabbitmq:rabbitmq@rabbitmq-blom:5672
+      connectionString: process.env.RABBITMQ_CONNECTION_URL, // A dns connection string like --> amqp://rabbitmq:rabbitmq@rabbitmq:5672
       exchange: { // the exchange for this transport where all message will be send it
-        name: 'blom.accounting.commands.exchange', 
+        name: 'sustainability.manglai.commands.exchange', 
         type: 'fanout',
       },
       queues: [ 
         {
-          name: 'blom.accounting.commands', // A queue name
+          name: 'sustainability.manglai.commands', // A queue name
           bindingKey: null, // A queue binding key. You can use null for fanout exchanges or wildcard string for topic ones
           options: { // All allowed queue options provided for the ampq node lib
             durable: true,
-            deadLetterExchange: 'blom.accounting.exchange.dlx',
-            deadLetterRoutingKey: 'blom.accounting.commands.dlx',
+            deadLetterExchange: 'sustainability.manglai.exchange.dlx',
+            deadLetterRoutingKey: 'sustainability.manglai.commands.dlx',
           },
           retryPolicy: { // The retries policiy for this trasnport. The retries will be try in a exponential way (firstly in 2s, secondly in 4s, lastly in 6s)
             maxRetries: 3,
             delay: 2000,
-            retryExchangeName: 'blom.superapp.retry.exchange',
+            retryExchangeName: 'sustainability.manglai.retry.exchange',
           },
         },
       ],
@@ -45,7 +45,7 @@ export default {
   subscribers: {
     domainEvents: [ // A mandatory key. All your domains events config goes under it
       {
-        eventName: 'blom.superapp.1.domain_event.order.updated', // The event which the built-in domain events subscribers will subscribe it
+        eventName: 'sustainability.manglai.1.domain_event.order.updated', // The event which the built-in domain events subscribers will subscribe it
         commandsPath: [ // An array of commands paths witch will be created and dispached. These events (in this case commands) must implement the EventInterface
           'server/events/orders/command/SyncronizeOrderCommand.js',
           'server/events/orders/command/SendOrderNotificationCommand.js',
@@ -55,7 +55,7 @@ export default {
     ],
     commands: [
       {
-        eventName: 'blom.accounting.1.command.order.syncronize_order', // The event which the built-in command subscribers will subscribe it
+        eventName: 'sustainability.manglai.1.command.order.syncronize_order', // The event which the built-in command subscribers will subscribe it
         handlerFactory: () => new SyncronizeOrderCommandHandler(), // The handler which will be invoke passing their Command as argument
         commandPath: 'server/events/orders/command/SendOrderNotificationCommand.js' // The command path
       },
@@ -75,7 +75,7 @@ export default {
 ### Setup your transports and bind the events
 There are two functions for setting up. You should use this functions before app init.
 ```js
-import { pubSubInitialization, transportsInitialization } from '@thecolvinco/nodejs-messenger';
+import { pubSubInitialization, transportsInitialization } from '@Sustainability-Solutions/nodejs-messenger';
 import config from 'path-to-your-config-file';
 
   const {
@@ -136,7 +136,7 @@ export default class CreateProductToAlgoliaCommandHandler {
 ---
 ### Consumers example
 ```js
-import { CommandConsumer } from '@thecolvinco/nodejs-messenger';
+import { CommandConsumer } from '@manglai/nodejs-messenger';
 import eventsConfig from '../../config/events.config.js';
 import container from '../container';
 
@@ -147,8 +147,8 @@ const commandConsumer = new CommandConsumer({ config: eventsConfig({ container }
 commandConsumer.consume({
   emitter: commandEmitter,
   prefetchValue: 1,
-  transport: 'superapp_commands',
-  queueName: 'blom.superapp.commands',
+  transport: 'manglai_commands',
+  queueName: 'sustainability.manglai.commands',
   onError: (error: Error) => logger.error(error.message, { tags: ['commands-consumer'] }),
 }).then(() => {
   console.info('Waiting for messages....');
@@ -161,7 +161,7 @@ commandConsumer.consume({
 ```
 ### About
 
-This package is maintained by [TheColvinCo](https://www.thecolvinco.com)
+This package is maintained by [Sustainability-Solutions](https://www.manglai.io)
 
 ### LICENSE
 

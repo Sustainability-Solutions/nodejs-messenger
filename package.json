@@ -1,7 +1,7 @@
 {
-  "name": "@thecolvinco/nodejs-messenger",
+  "name": "@manglai/nodejs-messenger",
   "description": "Message library for nodejs applications",
-  "version": "1.5.0",
+  "version": "1.1.0",
   "source": "src/main.ts",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -91,13 +91,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheColvinCo/nodejs-messenger"
+    "url": "git+https://github.com/Sustainability-Solutions/nodejs-messenger"
   },
-  "author": "TheColvinCo",
+  "author": "Sustainability-Solutions",
   "bugs": {
-    "url": "https://github.com/TheColvinCo/nodejs-messenger/issues"
+    "url": "https://github.com/Sustainability-Solutions/nodejs-messenger/issues"
   },
-  "homepage": "https://github.com/TheColvinCo/nodejs-messenger#readme",
+  "homepage": "https://github.com/Sustainability-Solutions/nodejs-messenger#readme",
   "engines": {
     "node": ">=14"
   }
