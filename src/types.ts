@@ -1,5 +1,5 @@
-import { Channel, Options, Message, ConsumeMessage } from 'amqplib';
-import { EventInterface, EventHandlerInterface } from './Interfaces';
+import { Channel, ConsumeMessage, Message, Options } from 'amqplib';
+import { EventHandlerInterface, EventInterface } from './Interfaces';
 
 type queue = {
   name: string,
@@ -21,6 +21,7 @@ type exchange = {
 type retryExchange = {
   channel: Channel,
   retryExchange: exchange,
+  hasDelayedPlugin?: boolean;
 };
 
 type retryable = {
@@ -31,6 +32,7 @@ type retryable = {
   maxRetries?: number,
   delay?: number,
   onRejected?: (msg: ConsumeMessage) => void
+  hasDelayedPlugin?: boolean;
 };
 
 type deadLetter = {
@@ -136,19 +138,9 @@ interface EventDispatcher {
 }
 
 export {
-  retryExchange,
-  retryable,
-  exchange,
-  queue,
-  worker,
-  deadLetter,
-  dlxFunc,
-  producer,
-  message,
-  messageBody,
-  config,
-  EventDispatcher,
-  EventInterface,
-  EventHandlerInterface,
+  EventDispatcher, EventHandlerInterface, EventInterface, config, deadLetter,
+  dlxFunc, exchange, message,
+  messageBody, producer, queue, retryExchange,
+  retryable, worker
 };
 

@@ -95,7 +95,8 @@ export default class CommandConsumer {
       maxRetries: number,
       delay: number,
       retryExchangeName?: string,
-      onRejected?: (message: Message) => void
+      onRejected?: (message: Message) => void,
+      hasDelayedPlugin?:boolean;
     },
     queueName: string,
     onError: ({ error, message }: {error: Error, message: messageBody}) => Promise<void>,
@@ -134,6 +135,7 @@ export default class CommandConsumer {
             maxRetries,
             delay,
             onRejected,
+            hasDelayedPlugin: retryPolicy?.hasDelayedPlugin
           });
         };
 

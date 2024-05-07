@@ -1,11 +1,11 @@
 import { Options } from 'amqplib';
 import { retryExchange, retryable } from '../types';
 
-const assertExchange = async ({ channel, retryExchange }: retryExchange): Promise<void> => {
+const assertExchange = async ({ channel, retryExchange, hasDelayedPlugin = true}: retryExchange): Promise<void> => {
   const { 'arguments': extraArgs = {}, ...options } = retryExchange.options || {};
   
   const assertExchangeOptions: Options.AssertExchange = {
-    durable: false,
+    durable: !hasDelayedPlugin,
     'arguments': {
       'x-delayed-type': 'direct',
       ...extraArgs
@@ -15,7 +15,7 @@ const assertExchange = async ({ channel, retryExchange }: retryExchange): Promis
   
   await channel.assertExchange(
     retryExchange.name,
-    'x-delayed-message',
+    hasDelayedPlugin ? 'x-delayed-message' : 'direct',
     assertExchangeOptions,
   );
 };
@@ -28,8 +28,9 @@ export default async ({
   maxRetries = 5,
   delay = 5000,
   onRejected,
+  hasDelayedPlugin
 } : retryable): Promise<void> => {
-  const { 'x-retries': xRetries } = message.properties.headers;
+  const { 'x-retries': xRetries } = message?.properties?.headers || {};
   const retries = xRetries ?? 0;
   const nextDelay = (retries + 1) * delay;
   
@@ -37,6 +38,7 @@ export default async ({
     await assertExchange({
       channel,
       retryExchange,
+      hasDelayedPlugin
     });
 
     const retryRoutingKey = queue.bindingKey ?? message.fields.routingKey;
