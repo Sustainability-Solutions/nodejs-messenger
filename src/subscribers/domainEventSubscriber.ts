@@ -16,9 +16,9 @@ export default {
     for (const commandPathConfig of commandsPath) {
       const commandPath = typeof commandPathConfig === 'string' ? commandPathConfig : commandPathConfig.path;
       const mapping = typeof commandPathConfig === 'string' ? (message) => message: commandPathConfig.mapping ;
-
-      const absoluteCommandPath = `${process.cwd()}/${commandPath.trim()}`;
-      const resolvedModule = await import(resolve(absoluteCommandPath));
+      const isAbsolute = commandPath.startsWith('#');
+      const absoluteCommandPath = isAbsolute ? commandPath.trim() : resolve(`${process.cwd()}/${commandPath.trim()}`);
+      const resolvedModule = await import(absoluteCommandPath);
       const resolvedModuleKey = Object.keys(resolvedModule)[0];
       const Command = resolvedModule[resolvedModuleKey];
 

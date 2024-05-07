@@ -1,11 +1,11 @@
+import { EventInterface } from '../Interfaces';
+import { config as configType, messageBody } from '../types';
 import {
   amqpConnect,
-  producer,
   createCommand,
   createEvent,
+  producer,
 } from '../utils';
-import { config as configType, messageBody } from '../types';
-import { EventInterface } from '../Interfaces';
 
 export default class EventDispatcher {
   private config: configType;

@@ -99,6 +99,6 @@
   },
   "homepage": "https://github.com/Sustainability-Solutions/nodejs-messenger#readme",
   "engines": {
-    "node": ">=14"
+    "node": ">=20.x.x"
   }
 }

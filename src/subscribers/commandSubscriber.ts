@@ -1,6 +1,6 @@
 import { resolve } from 'path';
-import { CommandEmitter } from '../emitter';
 import { EventHandlerInterface } from '../Interfaces';
+import { CommandEmitter } from '../emitter';
 import { messageBody } from '../types';
 
 export default {
@@ -15,8 +15,9 @@ export default {
     handlerFactory: () => EventHandlerInterface,
     commandPath: string,
   }): Promise<void> {
-    const absoluteCommandPath = `${process.cwd()}/${commandPath.trim()}`;
-    const resolvedCommandModule = await import(resolve(absoluteCommandPath));
+    const isAbsolute = commandPath.startsWith('#');
+    const absoluteCommandPath = isAbsolute ? commandPath.trim() : resolve(`${process.cwd()}/${commandPath.trim()}`);
+    const resolvedCommandModule = await import(absoluteCommandPath);
     const resolvedModuleKey = Object.keys(resolvedCommandModule)[0];
     const Command = resolvedCommandModule[resolvedModuleKey];
 
